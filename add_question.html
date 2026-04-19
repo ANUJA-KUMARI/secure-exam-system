@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>❓ Add Questions — {{ exam.title }}</h2>
+<p class="text-muted">{{ questions|length }} question(s) added so far</p>
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label">Question</label>
+                <input type="text" name="question_text" class="form-control" required>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-2">
+                    <label class="form-label">Option A</label>
+                    <input type="text" name="option_a" class="form-control" required>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <label class="form-label">Option B</label>
+                    <input type="text" name="option_b" class="form-control" required>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <label class="form-label">Option C</label>
+                    <input type="text" name="option_c" class="form-control" required>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <label class="form-label">Option D</label>
+                    <input type="text" name="option_d" class="form-control" required>
+                </div>
+            </div>
+            <div class="mb-3 mt-2">
+                <label class="form-label">Correct Answer</label>
+                <select name="correct_ans" class="form-select" required>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success">Add Question</button>
+            <a href="{{ url_for('admin.dashboard') }}" class="btn btn-primary ms-2">
+                Done — Go to Dashboard
+            </a>
+        </form>
+    </div>
+</div>
+
+{% if questions %}
+<h5>Questions added:</h5>
+{% for q in questions %}
+<div class="alert alert-light border">
+    <strong>Q{{ loop.index }}:</strong> {{ q.question_text }}
+    <span class="badge bg-success ms-2">Answer: {{ q.correct_ans }}</span>
+</div>
+{% endfor %}
+{% endif %}
+
+{% endblock %}

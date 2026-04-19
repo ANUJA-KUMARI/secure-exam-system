@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>🛡️ Admin Dashboard</h2>
+
+<div class="row mt-3">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5>Total Users</h5>
+                <h2>{{ users|length }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5>Total Exams</h5>
+                <h2>{{ exams|length }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- EXAM MANAGEMENT SECTION -->
+<div class="mt-2 d-flex justify-content-between align-items-center">
+    <h4>📚 Exams</h4>
+    <a href="{{ url_for('admin.create_exam') }}" class="btn btn-success">+ Create Exam</a>
+</div>
+
+{% if exams %}
+<table class="table table-bordered mt-2">
+    <thead class="table-dark">
+        <tr>
+            <th>Title</th>
+            <th>Questions</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for exam in exams %}
+        <tr>
+            <td>{{ exam.title }}</td>
+            <td>{{ exam.questions|length }}</td>
+            <td><span class="badge bg-success">Active</span></td>
+            <td>
+                <a href="{{ url_for('admin.add_question', exam_id=exam.id) }}"
+                   class="btn btn-sm btn-outline-primary">Add Questions</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-warning mt-2">
+    No exams yet. Click <strong>"+ Create Exam"</strong> to create your first exam!
+</div>
+{% endif %}
+
+<!-- AUDIT LOGS SECTION -->
+<h4 class="mt-4">📋 Recent Audit Logs</h4>
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Time</th>
+            <th>User ID</th>
+            <th>Action</th>
+            <th>IP Address</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for log in logs %}
+        <tr>
+            <td>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            <td>{{ log.user_id or 'Unknown' }}</td>
+            <td>
+                {% if 'FAIL' in log.action or 'LOCK' in log.action %}
+                    <span class="badge bg-danger">{{ log.action }}</span>
+                {% elif 'SUCCESS' in log.action %}
+                    <span class="badge bg-success">{{ log.action }}</span>
+                {% elif 'LOGOUT' in log.action %}
+                    <span class="badge bg-secondary">{{ log.action }}</span>
+                {% else %}
+                    <span class="badge bg-info">{{ log.action }}</span>
+                {% endif %}
+            </td>
+            <td>{{ log.ip_address }}</td>
+            <td>{{ log.details }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

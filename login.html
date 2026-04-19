@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h3 class="text-center mb-1">🔒 Secure Login</h3>
+                <p class="text-center text-muted mb-4">Online Examination System</p>
+
+                <form method="POST" action="{{ url_for('auth.login') }}">
+                    {{ csrf_token() if csrf_token is defined }}
+
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" name="username" class="form-control"
+                               placeholder="Enter username" required autocomplete="off">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control"
+                               placeholder="Enter password" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                    <p class="text-center mt-3">
+    New student? <a href="{{ url_for('auth.register') }}">Register here</a>
+</p>
+                </form>
+
+                <p class="text-center text-muted mt-3" style="font-size:12px;">
+                    🛡️ Protected by MFA, Rate Limiting & Session Security
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
